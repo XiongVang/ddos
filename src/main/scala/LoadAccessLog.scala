@@ -1,5 +1,3 @@
-package me.xiong.ddos
-
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.{col, split, trim}
 
@@ -30,12 +28,13 @@ object LoadAccessLog {
       .withColumn("key", trim(split(col("value")," ")(0)))
       .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
 
-   map.writeStream
+   val ds = map.writeStream
       .option("checkpointLocation", checkpoint)
       .format("kafka")
       .option("kafka.bootstrap.servers", kafkaBootstrapServers)
       .option("topic", outputTopic)
       .start()
-      .awaitTermination(1000)
+
+    ds.awaitTermination()
   }
 }
