@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SUCCESS_MESSAGE="****************************************************\nGo to http://localhost:9021 and verify that topics and connectors have been created\n***************************************"
+SUCCESS_MESSAGE="** Go to http://localhost:9021 and verify that topics and connectors have been created **"
 
 # Path to confluent-5.2.1
 CONFLUENT_HOME="/Users/vang4999/data-eng/confluent-5.2.1"

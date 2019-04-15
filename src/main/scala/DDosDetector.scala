@@ -30,12 +30,19 @@ object DDosDetector {
 
     val df = inputStream
       .selectExpr("CAST(value AS STRING)")
+      // TODO: validate log
+      //.where(expr("value rlike \\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b"))
       .withColumn("ip", trim(split(col("value"), " ")(0)))
       .withColumn("event_datetime", trim(split(col("value"), " ")(3)))
       .withColumn("event_datetime", expr("substring(event_datetime,2,length(event_datetime) -1)"))
       .withColumn("event_datetime", to_timestamp(timestamp_format(col("event_datetime"))))
+      // TODO: window
+      .groupBy(window(col("event_time"),"10 minutes"), col("ip"))
+      .count()
+      .withColumn("value", col("ip"))
 
-    val ouputStream = df.writeStream
+
+    val outputStream = df.writeStream
       .option("checkpointLocation", checkpoint)
       .outputMode("append")
       .format("kafka")
@@ -43,7 +50,7 @@ object DDosDetector {
       .option("topic", outputTopic)
       .start()
 
-    ouputStream.awaitTermination()
+    outputStream.awaitTermination()
   }
 
   // converts "25/May/2015:23:11:53" to "2015-05-25 23:11:53"
@@ -59,7 +66,7 @@ object DDosDetector {
     builder.toString()
   }
 
-  def extractMonthNumber(datetime: String): String = {
+  private def extractMonthNumber(datetime: String): String = {
     val month = datetime.split("/")(1)
     month match {
       case "January" => "01"
@@ -78,15 +85,15 @@ object DDosDetector {
     }
   }
 
-  def extractDayOfMonth(datetime: String): String = {
+  private def extractDayOfMonth(datetime: String): String = {
     datetime.split("/")(0)
   }
 
-  def extractYear(datetime: String): String = {
+  private def extractYear(datetime: String): String = {
     datetime.split("/")(2).split(":")(0)
   }
 
-  def extractTime(datetime: String): String = {
+  private def extractTime(datetime: String): String = {
     datetime.substring(datetime.indexOf(":") + 1)
   }
 
