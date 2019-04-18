@@ -1,5 +1,6 @@
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.{col, split, trim}
+import org.apache.spark.sql.streaming.Trigger
 
 object LoadAccessLog {
 
@@ -25,10 +26,12 @@ object LoadAccessLog {
       .textFile(textFile)
 
     val map = df
-      .withColumn("key", trim(split(col("value")," ")(0)))
+      .withColumn("key", trim(split(col("value"), " ")(0)))
       .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
 
-   val ds = map.writeStream
+    val ds = map
+      .writeStream
+      .trigger(Trigger.Once())
       .option("checkpointLocation", checkpoint)
       .format("kafka")
       .option("kafka.bootstrap.servers", kafkaBootstrapServers)
