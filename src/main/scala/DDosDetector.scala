@@ -29,13 +29,9 @@ object DDosDetector {
     //      .option("subscribe", inputTopic)
     //      .load()
 
-        val fileStream = spark
-          .readStream
-          .textFile("/Users/vang4999/data-eng/phdata/access-logs/")
-
-//    val batchFile = spark
-//      .read
-//      .textFile("/Users/vang4999/data-eng/phdata/access-logs/")
+    val fileStream = spark
+      .readStream
+      .textFile("/Users/vang4999/data-eng/phdata/access-logs/")
 
     val df = fileStream
       .selectExpr("CAST(value AS STRING)")
@@ -56,17 +52,10 @@ object DDosDetector {
       .format("parquet")
       .option("path", outputDirectory)
       .option("checkpointLocation", checkpoint)
-      .trigger(Trigger.ProcessingTime("10 seconds"))
+      .trigger(Trigger.Once())
       .outputMode(OutputMode.Append())
       .start()
     outputStream.awaitTermination()
-
-//    df
-//      .coalesce(5)
-//      .write
-//      .format("parquet")
-//      .option("path", outputDirectory)
-//      .save()
 
   }
 
