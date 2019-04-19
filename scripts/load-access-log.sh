@@ -13,7 +13,6 @@ CHECKPOINT_DIRECTOTRY="/Users/vang4999/data-eng/phdata/ddos/checkpoint-access-lo
 
 # Reset checkpoint
 rm -r $CHECKPOINT_DIRECTOTRY
-mkdir $CHECKPOINT_DIRECTOTRY
 
 cd ../ \
 && sbt assembly \

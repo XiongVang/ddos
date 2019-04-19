@@ -9,8 +9,10 @@ KAFKA_BOOTSTRAP_SERVERS="localhost:9092"
 
 ACCESS_LOG_TOPIC="access-log"
 
-OUTPUT_DIRECTORY="/Users/vang4999/data-eng/phdata/ddos-attacks"
+OUTPUT_DIRECTORY="/Users/vang4999/data-eng/phdata/ddos-attacks/"
 
+rm -r $CHECKPOINT
+rm -r $OUTPUT_DIRECTORY
 
 cd ../ \
 && sbt assembly \
