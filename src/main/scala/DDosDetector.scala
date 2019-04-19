@@ -20,6 +20,8 @@ object DDosDetector {
       .appName("DDos Detector")
       .getOrCreate()
 
+    spark.sparkContext.setLogLevel("WARN")
+
     val timestamp_format = udf(convertToTimeStampFormat)
 
     //    val kafkaStream = spark
@@ -45,6 +47,14 @@ object DDosDetector {
       .count()
       .where(col("count") > 100)
 
+//    val console = df
+//      .writeStream
+//      .format("console")
+//      .trigger(Trigger.Once())
+//      .outputMode("complete")
+//      .start()
+//    console.awaitTermination()
+
     val outputStream = df
       .coalesce(5)
       .writeStream
@@ -53,7 +63,6 @@ object DDosDetector {
       .option("path", outputDirectory)
       .option("checkpointLocation", checkpoint)
       .trigger(Trigger.Once())
-      .outputMode(OutputMode.Append())
       .start()
     outputStream.awaitTermination()
 
