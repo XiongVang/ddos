@@ -7,6 +7,8 @@ CONFLUENT_HOME="/Users/vang4999/data-eng/confluent-5.2.1"
 
 ACCESS_LOG_TOPIC="access-log"
 
+ACCESS_LOG_CONNECTOR_CONFIG_FILE="/Users/vang4999/data-eng/phdata/ddos/scripts/access-log-file-source.json"
+
 $CONFLUENT_HOME/bin/confluent destroy \
 
 sleep 10s

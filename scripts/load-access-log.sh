@@ -3,6 +3,8 @@
 # Path to spark (tested with spark-2.3.3-bin-hadoop2.7)
 SPARK_HOME="/Users/vang4999/data-eng/spark-2.3.3-bin-hadoop2.7/"
 
+PROJECT_HOME="/Users/vang4999/data-eng/phdata/ddos/"
+
 ACCESS_LOG_DIRECTORY="/Users/vang4999/data-eng/phdata/access-logs/"
 
 KAFKA_BOOTSTRAP_SERVERS="localhost:9092"
@@ -14,8 +16,7 @@ CHECKPOINT_DIRECTOTRY="/Users/vang4999/data-eng/phdata/ddos/checkpoint-access-lo
 # Reset checkpoint
 rm -r $CHECKPOINT_DIRECTOTRY
 
-cd ../ \
-&& sbt assembly \
+sbt assembly \
 && $SPARK_HOME/bin/spark-submit \
 --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0 \
 --class LoadAccessLog \
