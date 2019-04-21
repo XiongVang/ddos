@@ -1,17 +1,17 @@
 #!/bin/bash
 
+# Prerequesite: run create-topics-and-connectors.sh first
+
+# REQUIRED paths
+PROJECT_HOME="<Path to project root>"
+ACCESS_LOG_DIRECTORY="<Path to log file>"
+
 # Path to spark (tested with spark-2.3.3-bin-hadoop2.7)
-SPARK_HOME="/Users/vang4999/data-eng/spark-2.3.3-bin-hadoop2.7/"
-
-PROJECT_HOME="/Users/vang4999/data-eng/phdata/ddos/"
-
-ACCESS_LOG_DIRECTORY="/Users/vang4999/data-eng/phdata/access-logs/"
+SPARK_HOME="<Path to spark-2.3.3-bin-hadoop2.7>"
 
 KAFKA_BOOTSTRAP_SERVERS="localhost:9092"
-
 ACCESS_LOG_TOPIC="access-log"
-
-CHECKPOINT_DIRECTOTRY="/Users/vang4999/data-eng/phdata/ddos/checkpoint-access-log/"
+CHECKPOINT_DIRECTOTRY="$PROJECT_HOME/checkpoint-access-log/"
 
 # Reset checkpoint
 rm -r $CHECKPOINT_DIRECTOTRY
