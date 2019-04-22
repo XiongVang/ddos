@@ -16,5 +16,6 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
   "org.apache.spark" %% "spark-sql" % sparkVersion % "provided",
   "org.apache.spark" %% "spark-streaming" % sparkVersion % "provided",
-  "org.apache.spark" %% "spark-streaming-kafka-0-10" % "2.3.0" % "provided"
+  "org.apache.spark" %% "spark-streaming-kafka-0-10" % "2.3.0" % "provided",
+  "mysql" % "mysql-connector-java" % "8.0.11"
 )
