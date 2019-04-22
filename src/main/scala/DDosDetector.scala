@@ -12,16 +12,16 @@ class MysqlSink() extends ForeachWriter[Row] {
 
   def open(partitionId: Long, version: Long): Boolean = {
     Class.forName(driver)
-    connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/playground?useSSL=false", "root", "")
+    connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/ddos?useSSL=false&serverTimezone=UTC", "root", "")
     statement = connection.createStatement
     true
   }
 
   def process(value: Row): Unit = {
-    statement.executeUpdate("replace into ddos_attacks(start,end,ip,count) values("
-      + "'" + value.getTimestamp(0) + "'" + "," //ip
-      + "'" + value.getTimestamp(1) + "'" + "," //domain
-      + "'" + value.getString(2) + "'" + "," //time
+    statement.executeUpdate("replace into ddos.attacks(start,end,ip,count) values("
+      + "'" + value.getTimestamp(0) + "'" + "," //start
+      + "'" + value.getTimestamp(1) + "'" + "," //end
+      + "'" + value.getString(2) + "'" + "," //ip
       + value.getLong(3) //count
       + ")")
   }
@@ -34,22 +34,19 @@ class MysqlSink() extends ForeachWriter[Row] {
 object DDosDetector {
   def main(args: Array[String]) = {
 
-    if (args.length < 4) {
-      System.err.println("Usage: DDosDetector <kafka-bootstrap-servers> <input-topic> <output-directory> <checkpoint>")
+    if (args.length < 3) {
+      System.err.println("Usage: DDosDetector <kafka-bootstrap-servers> <input-topic> <checkpoint>")
       System.exit(1)
     }
 
     val kafkaBootstrapServers = args(0)
     val inputTopic = args(1)
-    val outputDirectory = args(2)
-    val checkpoint = args(3)
+    val checkpoint = args(2)
 
     val spark = SparkSession
       .builder()
       .appName("DDos Detector")
       .getOrCreate()
-
-    spark.sparkContext.setLogLevel("WARN")
 
     val timestamp_format = udf(convertToTimeStampFormat)
 
@@ -60,10 +57,6 @@ object DDosDetector {
       .option("subscribe", inputTopic)
       .option("startingOffsets", "earliest")
       .load()
-
-//    val fileStream = spark
-//      .readStream
-//      .textFile("/Users/vang4999/data-eng/phdata/access-logs/")
 
     val df = kafkaStream
       .selectExpr("CAST(value AS STRING)")
@@ -82,26 +75,6 @@ object DDosDetector {
         col("ip"),
         col("count")
       )
-
-    df.printSchema()
-
-    //    val console = df
-    //      .writeStream
-    //      .format("console")
-    //      .trigger(Trigger.ProcessingTime("30 seconds"))
-    //      .outputMode("update")
-    //      .start()
-    //    console.awaitTermination()
-
-    //    val outputStream = df
-    //      .writeStream
-    //      .queryName("ddos-detector")
-    //      .format("parquet")
-    //      .option("path", outputDirectory)
-    //      .option("checkpointLocation", checkpoint)
-    //      .trigger(Trigger.ProcessingTime("15 seconds"))
-    //      .start()
-    //    outputStream.awaitTermination()
 
     val writer = new MysqlSink();
     val mysqlSink = df

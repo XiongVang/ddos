@@ -3,11 +3,13 @@ This simple program uses Spark Structured Streaming to consume Apache log format
  
 ## Tested with
 
+sbt version 1.2.8
+
 spark-2.3.3-bin-hadoop2.7
 
 confluent-5.2.1
 
-MySQL  Version 8.0.11
+MySQL version 8.0.11
   
 ## Instructions
 
@@ -18,7 +20,7 @@ MySQL  Version 8.0.11
 
 	```sql
 	CREATE DATABASE IF NOT EXISTS ddos;
-	CREATE TABLE IF NOT EXISTS attacks (
+	CREATE TABLE IF NOT EXISTS ddos.attacks (
 		attack_id INT AUTO_INCREMENT,
 		start TIMESTAMP,
 		end TIMESTAMP,
@@ -31,10 +33,12 @@ MySQL  Version 8.0.11
 1. git clone https://github.com/XiongVang/ddos
 2. Fill in required paths for all `.sh` files in `scripts` directory
 3. From project root folder:
-  	1. Run `./scripts/create-topics-and-connectors.sh`
+  	1. Run `./scripts/create-topic.sh`
   	2. Run `./scripts/run-ddos-detector.sh`
-4. Run `SELECT * FROM attacks` in MySQL for results.
+  	3. Run `./scripts/load-access-log.sh`
+4. Run `SELECT * FROM ddos.attacks;` in MySQL for results.
 
 ## Future Improvements
+-  Use Kafka connect to ingest logs into `access-log` topic
 -  Write to Kudu instead of MySQL
 -  Use Machine Learning to detector DDOS attacks
