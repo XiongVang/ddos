@@ -12,7 +12,7 @@ ACCESS_LOG_TOPIC="access-log"
 CHECKPOINT_DIRECTOTRY="$PROJECT_HOME/checkpoint-access-log/"
 
 # Reset checkpoint
-rm -r $CHECKPOINT_DIRECTOTRY
+rm -r ${CHECKPOINT_DIRECTOTRY}
 
 sbt assembly \
 && $SPARK_HOME/bin/spark-submit \

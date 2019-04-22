@@ -1,10 +1,9 @@
 #!/bin/bash
 
-SUCCESS_MESSAGE="** Go to http://localhost:9021 and verify that topics and connectors have been created **"
+SUCCESS_MESSAGE="** Go to http://localhost:9021 and verify the topic **"
 
 # REQUIRED paths
 CONFLUENT_HOME="<Path to confluent-5.2.1>"
-PROJECT_HOME="<Path to project root>"
 
 ACCESS_LOG_TOPIC="access-log"
 
